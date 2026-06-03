@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="SMAI — Sistema de Monitoreo Ambiental Inteligente. Prototipo IoT basado en ESP32 con sensores DHT11, MQ-2 y LDR integrado a Blynk IoT para supervisión remota en tiempo real de espacios interiores en Bucaramanga, 2026." />
+  <meta name="keywords" content="IoT, ESP32, DHT11, MQ-2, LDR, Blynk, monitoreo ambiental, Bucaramanga, UTS, telecomunicaciones" />
+  <meta name="author" content="Edwin Alonso García Fuentes" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SMAI — Sistema de Monitoreo Ambiental Inteligente" />
+  <meta property="og:description" content="Prototipo IoT de bajo costo para supervisión remota en tiempo real de temperatura, humedad, gases y luminosidad en espacios interiores." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://smai-io-t.vercel.app/" />
+
+  <title>SMAI — Sistema de Monitoreo Ambiental Inteligente</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ==================== NAVBAR ==================== -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Navegación principal">
+    <div class="nav-container">
+      <a href="#hero" class="nav-logo" aria-label="Inicio SMAI">
+        <span class="logo-text">SMAI</span>
+        <span class="logo-dot"></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks" role="list">
+        <li><a href="#problema" class="nav-link">Problema</a></li>
+        <li><a href="#objetivos" class="nav-link">Objetivos</a></li>
+        <li><a href="#arquitectura" class="nav-link">Arquitectura</a></li>
+        <li><a href="#metodologia" class="nav-link">Metodología</a></li>
+        <li><a href="#presupuesto" class="nav-link">Presupuesto</a></li>
+        <li><a href="#contacto" class="nav-link nav-cta">Contacto</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ==================== HERO ==================== -->
+  <section class="hero" id="hero" aria-label="Sección principal">
+    <canvas id="particleCanvas" aria-hidden="true"></canvas>
+    <div class="hero-grid-overlay" aria-hidden="true"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge reveal">
+        <span class="badge-dot"></span>
+        Ingeniería de Telecomunicaciones · UTS · 2026
+      </div>
+
+      <h1 class="hero-title reveal">
+        <span class="title-small">Sistema de Monitoreo</span>
+        <span class="title-big">Ambiental<br/><em>Inteligente</em></span>
+      </h1>
+
+      <div class="hero-acronym reveal">
+        <span>S</span><span>M</span><span>A</span><span>I</span>
+      </div>
+
+      <p class="hero-subtitle reveal">
+        Prototipo IoT basado en <strong>ESP32</strong> con sensores <strong>DHT11</strong>, <strong>MQ-2</strong> y <strong>LDR</strong>,
+        integrado a la plataforma <strong>Blynk IoT</strong> para supervisión remota en tiempo real
+        de espacios interiores en Bucaramanga.
+      </p>
+
+      <div class="hero-actions reveal">
+        <a href="#problema" class="btn btn-primary">
+          <span>Conocer el Proyecto</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1L15 8L8 15M15 8H1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="https://github.com/edwingarcia18/SMAI---IoT" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          Ver Repositorio
+        </a>
+      </div>
+
+      <div class="hero-stats reveal">
+        <div class="stat-item">
+          <span class="stat-number">4</span>
+          <span class="stat-label">Variables monitoreadas</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-number">&lt;2s</span>
+          <span class="stat-label">Latencia máxima</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-number">$369K</span>
+          <span class="stat-label">Presupuesto COP</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-number">22</span>
+          <span class="stat-label">Semanas de desarrollo</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ==================== PROBLEMA ==================== -->
+  <section class="section" id="problema" aria-labelledby="problema-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">01 · Contexto</span>
+        <h2 class="section-title" id="problema-title">El Problema</h2>
+        <p class="section-desc">
+          En los espacios interiores académicos, residenciales y de laboratorio de Bucaramanga
+          persiste una deficiencia estructural en materia de supervisión ambiental continua y automatizada.
+        </p>
+      </div>
+
+      <div class="problema-grid">
+        <!-- Pregunta de investigación -->
+        <div class="pregunta-card reveal">
+          <div class="pregunta-icon" aria-hidden="true">?</div>
+          <h3>Pregunta de Investigación</h3>
+          <p>
+            ¿En qué medida la implementación de un sistema IoT basado en ESP32, con adquisición
+            simultánea de temperatura, humedad relativa, concentración de gases combustibles y nivel
+            de iluminación, mejora la capacidad de supervisión y respuesta ante condiciones ambientales
+            críticas en espacios interiores de Bucaramanga en el año 2026?
+          </p>
+        </div>
+
+        <!-- Cards de causas -->
+        <div class="causas-grid">
+          <div class="causa-card reveal" data-delay="0">
+            <div class="causa-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            </div>
+            <h4>Sin soluciones unificadas</h4>
+            <p>Ausencia de prototipos que combinen temperatura, humedad, gases y luminosidad bajo una única arquitectura IoT accesible.</p>
+          </div>
+
+          <div class="causa-card reveal" data-delay="100">
+            <div class="causa-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>
+            </div>
+            <h4>Baja transferencia tecnológica</h4>
+            <p>Limitada adopción de investigaciones internacionales en IoT hacia el contexto académico de las UTS y la región de Santander.</p>
+          </div>
+
+          <div class="causa-card reveal" data-delay="200">
+            <div class="causa-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            </div>
+            <h4>Baja cultura preventiva</h4>
+            <p>Escasa implementación de monitoreo ambiental proactivo en edificaciones residenciales, académicas y de laboratorio de Bucaramanga.</p>
+          </div>
+
+          <div class="causa-card reveal" data-delay="300">
+            <div class="causa-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </div>
+            <h4>Riesgos sin detección</h4>
+            <p>Acumulación de gases combustibles (GLP, metano) sin alertas oportunas. Deterioro de equipos electrónicos por condiciones termohigrométricas adversas.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dato de la OMS -->
+      <div class="oms-banner reveal">
+        <div class="oms-number">9%</div>
+        <div class="oms-text">
+          <strong>Reducción en productividad cognitiva</strong>
+          <span>asociada a la deficiente calidad del aire interior, según la OMS (2018). El monitoreo continuo es esencial en entornos académicos.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== JUSTIFICACIÓN ==================== -->
+  <section class="section section-dark" id="justificacion" aria-labelledby="justificacion-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">02 · Por qué SMAI</span>
+        <h2 class="section-title" id="justificacion-title">Justificación</h2>
+      </div>
+
+      <div class="justificacion-grid">
+        <div class="just-card reveal" data-delay="0">
+          <div class="just-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <h3>Aporte Científico</h3>
+          <p>Evidencia experimental sobre arquitecturas sensor-microcontrolador-nube en condiciones reales de Bucaramanga, cubriendo la brecha identificada en IEEE IoT Journal, FGCS y Sensors & Actuators A.</p>
+          <div class="just-tag">IEEE · Scopus · ScienceDirect</div>
+        </div>
+
+        <div class="just-card reveal" data-delay="150">
+          <div class="just-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <h3>Solución de Bajo Costo</h3>
+          <p>Implementable con menos de COP 200.000 en componentes disponibles en Colombia (entrega &lt;5 días), frente a sistemas comerciales que superan los USD 500. Potencial de ahorro energético del 15–30%.</p>
+          <div class="just-tag">ESP32 · DHT11 · MQ-2 · LDR</div>
+        </div>
+
+        <div class="just-card reveal" data-delay="300">
+          <div class="just-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3>Articulación Académica</h3>
+          <p>Fortalece la línea de investigación en IoT y Sistemas Embebidos de las UTS. Base reproducible para semilleros, trabajos de grado colaborativos y publicaciones del programa de Telecomunicaciones.</p>
+          <div class="just-tag">UTS · Semilleros · Publicaciones</div>
+        </div>
+
+        <div class="just-card reveal" data-delay="450">
+          <div class="just-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h3>Viabilidad Técnica</h3>
+          <p>Componentes con amplia disponibilidad en el mercado colombiano. Plataforma Blynk IoT con plan gratuito funcional para prototipos académicos. Herramientas de desarrollo open-source sin costo adicional.</p>
+          <div class="just-tag">Blynk Free · Arduino IDE · GitHub</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== OBJETIVO GENERAL ==================== -->
+  <section class="section section-accent" id="objetivos" aria-labelledby="objetivo-title">
+    <div class="container">
+      <div class="objetivo-banner reveal">
+        <div class="objetivo-label">Objetivo General</div>
+        <blockquote class="objetivo-text">
+          Diseñar, implementar y validar un sistema IoT de monitoreo ambiental inteligente (SMAI)
+          mediante la integración de un microcontrolador <mark>ESP32</mark> con sensores <mark>DHT11</mark>,
+          <mark>MQ-2</mark> y <mark>LDR</mark>, y la plataforma de visualización remota <mark>Blynk IoT</mark>,
+          con el fin de mejorar la capacidad de supervisión en tiempo real, el control automático de
+          variables ambientales críticas y la detección oportuna de condiciones de riesgo en espacios
+          interiores de Bucaramanga durante el año 2026.
+        </blockquote>
+      </div>
+
+      <!-- Objetivos específicos -->
+      <div class="section-header reveal" style="margin-top: 5rem;">
+        <span class="section-tag">Objetivos Específicos</span>
+      </div>
+
+      <div class="oe-timeline">
+        <div class="oe-item reveal" data-delay="0">
+          <div class="oe-number" aria-hidden="true">01</div>
+          <div class="oe-content">
+            <h3>Arquitectura Electrónica</h3>
+            <p>Diseñar la distribución de pines GPIO del ESP32, el esquema de conexión de los sensores DHT11, MQ-2 y LDR con sus actuadores, y el diagrama de flujo del firmware para establecer una base técnica documentada, escalable y reproducible.</p>
+            <div class="oe-tags">
+              <span>Fritzing / KiCad</span>
+              <span>GPIO</span>
+              <span>Diagrama de flujo</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="oe-item reveal" data-delay="150">
+          <div class="oe-number" aria-hidden="true">02</div>
+          <div class="oe-content">
+            <h3>Firmware SMAI v1.0</h3>
+            <p>Desarrollar el firmware en Arduino IDE implementando los módulos de adquisición de datos, procesamiento local con umbrales predefinidos y control automático de actuadores (ventilador DC, alarma LED y módulo relé) para garantizar autonomía operativa.</p>
+            <div class="oe-tags">
+              <span>Arduino IDE</span>
+              <span>C++</span>
+              <span>GitHub</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="oe-item reveal" data-delay="300">
+          <div class="oe-number" aria-hidden="true">03</div>
+          <div class="oe-content">
+            <h3>Integración Blynk IoT</h3>
+            <p>Configurar la plataforma Blynk IoT como interfaz de visualización remota y control manual, estableciendo comunicación WiFi mediante TCP/IP y habilitando notificaciones push automáticas para supervisión desde dispositivos Android e iOS.</p>
+            <div class="oe-tags">
+              <span>TCP/IP</span>
+              <span>WiFi 802.11</span>
+              <span>Push notifications</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== ARQUITECTURA ==================== -->
+  <section class="section" id="arquitectura" aria-labelledby="arquitectura-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">03 · Sistema</span>
+        <h2 class="section-title" id="arquitectura-title">Arquitectura del Sistema</h2>
+        <p class="section-desc">El SMAI sigue el modelo de cuatro capas IoT propuesto por Zanella et al. (2014): percepción, red, plataforma y aplicación.</p>
+      </div>
+
+      <div class="arch-diagram reveal">
+        <!-- Capa 1: Sensores -->
+        <div class="arch-layer" id="layer-sensors">
+          <div class="layer-label">Capa de Percepción</div>
+          <div class="arch-nodes">
+            <div class="arch-node sensor">
+              <div class="node-icon" aria-hidden="true">🌡️</div>
+              <div class="node-name">DHT11</div>
+              <div class="node-desc">Temp · Humedad<br/>0–50°C · 20–90% HR</div>
+            </div>
+            <div class="arch-node sensor">
+              <div class="node-icon" aria-hidden="true">💨</div>
+              <div class="node-name">MQ-2</div>
+              <div class="node-desc">Gases combustibles<br/>GLP · Metano · Propano</div>
+            </div>
+            <div class="arch-node sensor">
+              <div class="node-icon" aria-hidden="true">💡</div>
+              <div class="node-name">LDR</div>
+              <div class="node-desc">Luminosidad<br/>Fotoresistor 5mm</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flecha -->
+        <div class="arch-arrow" aria-hidden="true">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">Señales analógicas / digitales</div>
+        </div>
+
+        <!-- Capa 2: Procesamiento -->
+        <div class="arch-layer" id="layer-proc">
+          <div class="layer-label">Capa de Procesamiento</div>
+          <div class="arch-nodes">
+            <div class="arch-node processor">
+              <div class="node-icon" aria-hidden="true">⚡</div>
+              <div class="node-name">ESP32</div>
+              <div class="node-desc">Xtensa LX6 240MHz<br/>520KB SRAM · WiFi · BLE</div>
+            </div>
+          </div>
+          <div class="actuators-row">
+            <div class="actuator-node">
+              <span>🔄</span> Ventilador DC 5V
+            </div>
+            <div class="actuator-node">
+              <span>🔴</span> Alarma LED
+            </div>
+            <div class="actuator-node">
+              <span>🔌</span> Módulo Relé
+            </div>
+          </div>
+        </div>
+
+        <!-- Flecha -->
+        <div class="arch-arrow" aria-hidden="true">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">TCP/IP · WiFi 802.11 b/g/n</div>
+        </div>
+
+        <!-- Capa 3: Plataforma -->
+        <div class="arch-layer" id="layer-platform">
+          <div class="layer-label">Plataforma en la Nube</div>
+          <div class="arch-nodes">
+            <div class="arch-node platform">
+              <div class="node-icon" aria-hidden="true">☁️</div>
+              <div class="node-name">Blynk IoT</div>
+              <div class="node-desc">Backend · API REST<br/>Virtual Pins · Historial</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Flecha -->
+        <div class="arch-arrow" aria-hidden="true">
+          <div class="arrow-line"></div>
+          <div class="arrow-label">Latencia ≤ 2s · Push notifications</div>
+        </div>
+
+        <!-- Capa 4: Aplicación -->
+        <div class="arch-layer" id="layer-app">
+          <div class="layer-label">Capa de Aplicación</div>
+          <div class="arch-nodes">
+            <div class="arch-node app">
+              <div class="node-icon" aria-hidden="true">📱</div>
+              <div class="node-name">Dashboard Móvil</div>
+              <div class="node-desc">Android · iOS<br/>Gauges · Alertas · Gráficas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== METODOLOGÍA ==================== -->
+  <section class="section section-dark" id="metodologia" aria-labelledby="metodologia-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">04 · Proceso</span>
+        <h2 class="section-title" id="metodologia-title">Metodología I+D</h2>
+        <p class="section-desc">
+          El SMAI se desarrolla bajo un enfoque práctico de Investigación y Desarrollo, partiendo del análisis
+          del problema real de supervisión ambiental hasta llegar a un prototipo funcional validado experimentalmente.
+        </p>
+      </div>
+
+      <div class="metodologia-timeline">
+        <div class="timeline-item reveal" data-delay="0">
+          <div class="tl-marker">
+            <div class="tl-number">1</div>
+            <div class="tl-line" aria-hidden="true"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-phase">Fase 1 · Sem. 1–4</div>
+            <h3>Revisión y Diseño</h3>
+            <p>Revisión bibliográfica complementaria en IEEE Xplore, Scopus y ScienceDirect. Diseño de la arquitectura hardware, esquemas eléctricos y diagramas de flujo del firmware que fundamentan la implementación.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal" data-delay="100">
+          <div class="tl-marker">
+            <div class="tl-number">2</div>
+            <div class="tl-line" aria-hidden="true"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-phase">Fase 2 · Sem. 5–8</div>
+            <h3>Implementación Hardware</h3>
+            <p>Ensamblaje físico del prototipo en protoboard y PCB perforada. Pruebas de continuidad eléctrica y verificación del esquema de conexiones para confirmar la integridad del circuito antes de la programación.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal" data-delay="200">
+          <div class="tl-marker">
+            <div class="tl-number">3</div>
+            <div class="tl-line" aria-hidden="true"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-phase">Fase 3 · Sem. 9–13</div>
+            <h3>Desarrollo de Firmware</h3>
+            <p>Codificación en C++ (Arduino IDE) de los módulos de adquisición DHT11, MQ-2 y LDR, control automático de actuadores con lógica de doble umbral e integración completa con la plataforma Blynk IoT.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal" data-delay="300">
+          <div class="tl-marker">
+            <div class="tl-number">4</div>
+            <div class="tl-line" aria-hidden="true"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-phase">Fase 4 · Sem. 13–18</div>
+            <h3>Integración y Pruebas</h3>
+            <p>Configuración del dashboard Blynk, calibración de sensores con instrumentos de referencia, prueba de fiabilidad y latencia durante 7 días continuos, y validación de actuadores en condiciones controladas.</p>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal" data-delay="400">
+          <div class="tl-marker">
+            <div class="tl-number">5</div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-phase">Fase 5 · Sem. 18–22</div>
+            <h3>Análisis y Cierre</h3>
+            <p>Análisis estadístico de métricas de desempeño, redacción del informe técnico final, documentación del manual de instalación, publicación en repositorio GitHub bajo licencia MIT y preparación de sustentación.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CRONOGRAMA ==================== -->
+  <section class="section" id="cronograma" aria-labelledby="cronograma-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">05 · Planificación</span>
+        <h2 class="section-title" id="cronograma-title">Cronograma</h2>
+        <p class="section-desc">Plan de actividades estructurado en 22 semanas y 5 fases secuenciales de Investigación y Desarrollo.</p>
+      </div>
+
+      <div class="gantt-wrapper reveal">
+        <div class="gantt-table" role="table" aria-label="Cronograma de actividades Gantt">
+          <div class="gantt-header" role="row">
+            <div class="gantt-col-info" role="columnheader">Fase / Actividad</div>
+            <div class="gantt-weeks" role="columnheader" aria-label="Semanas 1 a 22">
+              <!-- Week numbers -->
+              <div class="week-numbers" aria-hidden="true">
+                <span>1</span><span>2</span><span>3</span><span>4</span>
+                <span>5</span><span>6</span><span>7</span><span>8</span>
+                <span>9</span><span>10</span><span>11</span><span>12</span>
+                <span>13</span><span>14</span><span>15</span><span>16</span>
+                <span>17</span><span>18</span><span>19</span><span>20</span>
+                <span>21</span><span>22</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fase 1 -->
+          <div class="gantt-phase-header phase-1" role="row">
+            <div class="gantt-col-info" role="cell">Fase 1: Revisión y Diseño</div>
+            <div class="gantt-weeks" role="cell" aria-hidden="true"></div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Revisión bibliográfica complementaria</div>
+            <div class="gantt-weeks" role="cell" aria-label="Semanas 1 a 2">
+              <div class="gantt-bar phase-1" style="--start:0; --span:2" aria-label="Semanas 1-2"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Diseño arquitectura hardware y esquemas</div>
+            <div class="gantt-weeks" role="cell" aria-label="Semanas 2 a 4">
+              <div class="gantt-bar phase-1" style="--start:1; --span:3" aria-label="Semanas 2-4"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Diseño de diagramas de flujo del firmware</div>
+            <div class="gantt-weeks" role="cell" aria-label="Semanas 3 a 4">
+              <div class="gantt-bar phase-1" style="--start:2; --span:2" aria-label="Semanas 3-4"></div>
+            </div>
+          </div>
+
+          <!-- Fase 2 -->
+          <div class="gantt-phase-header phase-2" role="row">
+            <div class="gantt-col-info" role="cell">Fase 2: Implementación Hardware</div>
+            <div class="gantt-weeks" role="cell" aria-hidden="true"></div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Montaje físico del prototipo</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-2" style="--start:4; --span:3" aria-label="Semanas 5-7"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Pruebas de continuidad y verificación</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-2" style="--start:6; --span:2" aria-label="Semanas 7-8"></div>
+            </div>
+          </div>
+
+          <!-- Fase 3 -->
+          <div class="gantt-phase-header phase-3" role="row">
+            <div class="gantt-col-info" role="cell">Fase 3: Desarrollo Firmware</div>
+            <div class="gantt-weeks" role="cell" aria-hidden="true"></div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Codificación módulos DHT11 y LDR</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-3" style="--start:8; --span:2" aria-label="Semanas 9-10"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Codificación MQ-2 y control de actuadores</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-3" style="--start:9; --span:2" aria-label="Semanas 10-11"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Integración Blynk IoT en firmware</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-3" style="--start:11; --span:2" aria-label="Semanas 12-13"></div>
+            </div>
+          </div>
+
+          <!-- Fase 4 -->
+          <div class="gantt-phase-header phase-4" role="row">
+            <div class="gantt-col-info" role="cell">Fase 4: Integración y Pruebas</div>
+            <div class="gantt-weeks" role="cell" aria-hidden="true"></div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Configuración dashboard Blynk IoT</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-4" style="--start:12; --span:2" aria-label="Semanas 13-14"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Pruebas de precisión (calibración)</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-4" style="--start:13; --span:2" aria-label="Semanas 14-15"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Prueba de fiabilidad y latencia (7 días)</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-4" style="--start:14; --span:2" aria-label="Semanas 15-16"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Pruebas de activación de actuadores</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-4" style="--start:16; --span:2" aria-label="Semanas 17-18"></div>
+            </div>
+          </div>
+
+          <!-- Fase 5 -->
+          <div class="gantt-phase-header phase-5" role="row">
+            <div class="gantt-col-info" role="cell">Fase 5: Documentación y Cierre</div>
+            <div class="gantt-weeks" role="cell" aria-hidden="true"></div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Análisis de datos y métricas estadísticas</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-5" style="--start:17; --span:2" aria-label="Semanas 18-19"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Redacción del informe técnico final</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-5" style="--start:18; --span:2" aria-label="Semanas 19-20"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Manual de instalación y repositorio GitHub</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-5" style="--start:18; --span:2" aria-label="Semanas 19-20"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Revisión y correcciones del asesor</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-5" style="--start:19; --span:2" aria-label="Semanas 20-21"></div>
+            </div>
+          </div>
+          <div class="gantt-row" role="row">
+            <div class="gantt-col-info" role="cell">Entrega final y preparación sustentación</div>
+            <div class="gantt-weeks" role="cell">
+              <div class="gantt-bar phase-5" style="--start:21; --span:1" aria-label="Semana 22"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="gantt-legend" aria-label="Leyenda de colores">
+          <div class="legend-item"><div class="legend-dot phase-1"></div><span>Revisión y Diseño</span></div>
+          <div class="legend-item"><div class="legend-dot phase-2"></div><span>Hardware</span></div>
+          <div class="legend-item"><div class="legend-dot phase-3"></div><span>Firmware</span></div>
+          <div class="legend-item"><div class="legend-dot phase-4"></div><span>Integración</span></div>
+          <div class="legend-item"><div class="legend-dot phase-5"></div><span>Documentación</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== PRESUPUESTO ==================== -->
+  <section class="section section-dark" id="presupuesto" aria-labelledby="presupuesto-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">06 · Recursos</span>
+        <h2 class="section-title" id="presupuesto-title">Presupuesto</h2>
+        <p class="section-desc">
+          Costo total estimado financiado en su totalidad por el estudiante investigador,
+          reflejando precios de mercado en Colombia en el primer trimestre de 2026.
+        </p>
+      </div>
+
+      <div class="presupuesto-layout">
+        <!-- Total destacado -->
+        <div class="total-card reveal">
+          <div class="total-label">Costo Total Estimado</div>
+          <div class="total-amount">$369.550</div>
+          <div class="total-currency">COP · Pesos Colombianos</div>
+          <div class="total-note">Frente a sistemas propietarios &gt; USD 500</div>
+          <!-- Distribución visual -->
+          <div class="budget-bars" aria-label="Distribución del presupuesto">
+            <div class="budget-bar-item">
+              <span class="bb-label">Materiales</span>
+              <div class="bb-track"><div class="bb-fill" style="--pct: 48%" data-pct="48"></div></div>
+              <span class="bb-value">$96.500</span>
+            </div>
+            <div class="budget-bar-item">
+              <span class="bb-label">Equipos</span>
+              <div class="bb-track"><div class="bb-fill" style="--pct: 49%" data-pct="49"></div></div>
+              <span class="bb-value">$98.000</span>
+            </div>
+            <div class="budget-bar-item">
+              <span class="bb-label">Servicios</span>
+              <div class="bb-track"><div class="bb-fill" style="--pct: 33%" data-pct="33"></div></div>
+              <span class="bb-value">$66.000</span>
+            </div>
+            <div class="budget-bar-item">
+              <span class="bb-label">Otros</span>
+              <div class="bb-track"><div class="bb-fill" style="--pct: 47%" data-pct="47"></div></div>
+              <span class="bb-value">$95.000</span>
+            </div>
+            <div class="budget-bar-item">
+              <span class="bb-label">Contingencias</span>
+              <div class="bb-track"><div class="bb-fill" style="--pct: 10%" data-pct="10"></div></div>
+              <span class="bb-value">$19.050</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla de ítems -->
+        <div class="presupuesto-table reveal">
+          <table aria-label="Detalle de presupuesto del proyecto SMAI">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Recurso</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">V. Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>ESP32 DevKit v1</td><td><span class="cat-badge material">Material</span></td><td>$28.000</td></tr>
+              <tr><td>2</td><td>Sensor DHT11 (x2)</td><td><span class="cat-badge material">Material</span></td><td>$9.000</td></tr>
+              <tr><td>3</td><td>Sensor MQ-2</td><td><span class="cat-badge material">Material</span></td><td>$8.000</td></tr>
+              <tr><td>4</td><td>Fotoresistor LDR (x5)</td><td><span class="cat-badge material">Material</span></td><td>$3.000</td></tr>
+              <tr><td>5</td><td>Módulo relé 5V · 2 canales</td><td><span class="cat-badge material">Material</span></td><td>$6.500</td></tr>
+              <tr><td>6</td><td>Ventilador DC 5V</td><td><span class="cat-badge material">Material</span></td><td>$12.000</td></tr>
+              <tr><td>7</td><td>LEDs · Resistencias · Jumpers</td><td><span class="cat-badge material">Material</span></td><td>$8.000</td></tr>
+              <tr><td>8</td><td>Protoboard + PCB</td><td><span class="cat-badge material">Material</span></td><td>$12.000</td></tr>
+              <tr><td>9</td><td>Cable USB Tipo C</td><td><span class="cat-badge material">Material</span></td><td>$5.000</td></tr>
+              <tr><td>10</td><td>Fuente regulada 5V/2A</td><td><span class="cat-badge equipo">Equipo</span></td><td>$18.000</td></tr>
+              <tr><td>11</td><td>Termómetro de referencia ±0,1°C</td><td><span class="cat-badge equipo">Equipo</span></td><td>$35.000</td></tr>
+              <tr><td>12</td><td>Luxómetro digital ±5%</td><td><span class="cat-badge equipo">Equipo</span></td><td>$45.000</td></tr>
+              <tr><td>13</td><td>Internet WiFi (22 semanas)</td><td><span class="cat-badge servicio">Servicio</span></td><td>$66.000</td></tr>
+              <tr><td>14–16</td><td>Blynk IoT · Arduino IDE · GitHub</td><td><span class="cat-badge servicio">Servicio</span></td><td>$0</td></tr>
+              <tr><td>17</td><td>Impresión informe (3 ejemplares)</td><td><span class="cat-badge otro">Otros</span></td><td>$75.000</td></tr>
+              <tr><td>18</td><td>Transporte (4 viajes)</td><td><span class="cat-badge otro">Otros</span></td><td>$20.000</td></tr>
+              <tr><td>19</td><td>Imprevistos y contingencias (10%)</td><td><span class="cat-badge contingencia">Contingencia</span></td><td>$19.050</td></tr>
+              <tr class="total-row"><td colspan="3"><strong>TOTAL ESTIMADO</strong></td><td><strong>$369.550</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== TECNOLOGÍAS ==================== -->
+  <section class="section" id="tecnologias" aria-labelledby="tecnologias-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">07 · Stack</span>
+        <h2 class="section-title" id="tecnologias-title">Tecnologías</h2>
+      </div>
+
+      <div class="tech-grid">
+        <div class="tech-card reveal" data-delay="0">
+          <div class="tech-icon esp32" aria-hidden="true">ESP</div>
+          <h4>ESP32</h4>
+          <p>Xtensa LX6 · 240MHz · WiFi · BLE · 34 GPIO</p>
+        </div>
+        <div class="tech-card reveal" data-delay="80">
+          <div class="tech-icon arduino" aria-hidden="true">⌨</div>
+          <h4>Arduino IDE</h4>
+          <p>Firmware C++ · Librerías MIT · Serial Monitor</p>
+        </div>
+        <div class="tech-card reveal" data-delay="160">
+          <div class="tech-icon blynk" aria-hidden="true">B</div>
+          <h4>Blynk IoT</h4>
+          <p>Dashboard · Virtual Pins · Push · API REST</p>
+        </div>
+        <div class="tech-card reveal" data-delay="240">
+          <div class="tech-icon dht" aria-hidden="true">🌡</div>
+          <h4>DHT11</h4>
+          <p>Temperatura 0–50°C · Humedad 20–90% HR</p>
+        </div>
+        <div class="tech-card reveal" data-delay="320">
+          <div class="tech-icon mq2" aria-hidden="true">💨</div>
+          <h4>MQ-2</h4>
+          <p>GLP · Metano · Propano · Humo · SnO₂</p>
+        </div>
+        <div class="tech-card reveal" data-delay="400">
+          <div class="tech-icon ldr" aria-hidden="true">💡</div>
+          <h4>LDR</h4>
+          <p>Fotoresistor · Divisor tensión · ADC 12-bit</p>
+        </div>
+        <div class="tech-card reveal" data-delay="480">
+          <div class="tech-icon wifi" aria-hidden="true">📡</div>
+          <h4>WiFi 802.11</h4>
+          <p>TCP/IP · DHCP · Latencia &lt;2s · 2.4GHz</p>
+        </div>
+        <div class="tech-card reveal" data-delay="560">
+          <div class="tech-icon github" aria-hidden="true">⌥</div>
+          <h4>GitHub</h4>
+          <p>Repositorio público · Licencia MIT · Open Source</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== BENEFICIOS ==================== -->
+  <section class="section section-dark" id="beneficios" aria-labelledby="beneficios-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">08 · Impacto</span>
+        <h2 class="section-title" id="beneficios-title">Beneficios del SMAI</h2>
+      </div>
+
+      <div class="beneficios-grid">
+        <div class="beneficio-card reveal" data-delay="0">
+          <div class="ben-num" aria-hidden="true">01</div>
+          <h3>Supervisión en Tiempo Real</h3>
+          <p>Monitoreo continuo de temperatura, humedad, gases y luminosidad con latencia inferior a 2 segundos desde cualquier dispositivo móvil.</p>
+        </div>
+        <div class="beneficio-card reveal" data-delay="100">
+          <div class="ben-num" aria-hidden="true">02</div>
+          <h3>Detección Temprana de Riesgos</h3>
+          <p>Alertas push inmediatas ante concentraciones peligrosas de GLP o metano, previniendo incidentes antes de que escalen.</p>
+        </div>
+        <div class="beneficio-card reveal" data-delay="200">
+          <div class="ben-num" aria-hidden="true">03</div>
+          <h3>Control Automático</h3>
+          <p>Lógica de doble umbral que activa actuadores sin intervención humana, reduciendo la tasa de falsas alarmas y garantizando respuesta ante condiciones críticas.</p>
+        </div>
+        <div class="beneficio-card reveal" data-delay="300">
+          <div class="ben-num" aria-hidden="true">04</div>
+          <h3>Bajo Costo Accesible</h3>
+          <p>Implementable en menos de COP 200.000 en componentes. Más de 97% más económico que sistemas propietarios equivalentes disponibles en el mercado.</p>
+        </div>
+        <div class="beneficio-card reveal" data-delay="400">
+          <div class="ben-num" aria-hidden="true">05</div>
+          <h3>Escalable y Reproducible</h3>
+          <p>Arquitectura modular documentada en GitHub bajo licencia MIT. Base técnica que puede ampliarse con nuevos sensores o adaptarse a diferentes entornos.</p>
+        </div>
+        <div class="beneficio-card reveal" data-delay="500">
+          <div class="ben-num" aria-hidden="true">06</div>
+          <h3>Impacto Académico</h3>
+          <p>Fortalece la línea IoT de las UTS y genera registros históricos para investigación. Potencial de ahorro energético del 15–30% mediante automatización de actuadores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== REFERENCIAS ==================== -->
+  <section class="section" id="referencias" aria-labelledby="referencias-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">09 · Bibliografía</span>
+        <h2 class="section-title" id="referencias-title">Referencias</h2>
+        <p class="section-desc">Fuentes indexadas en IEEE Xplore, Scopus y ScienceDirect. Período de revisión: 2013–2023. Formato APA 7.ª edición.</p>
+      </div>
+
+      <div class="referencias-list reveal" id="refList">
+        <details class="ref-item">
+          <summary>Al-Fuqaha et al. (2015) · <em>IEEE Communications Surveys & Tutorials</em></summary>
+          <p>Al-Fuqaha, A., Guizani, M., Mohammadi, M., Aledhari, M., & Ayyash, M. (2015). Internet of Things: A survey on enabling technologies, protocols, and applications. <em>IEEE Communications Surveys & Tutorials, 17</em>(4), 2347–2376. <a href="https://doi.org/10.1109/COMST.2015.2444095" target="_blank" rel="noopener noreferrer">https://doi.org/10.1109/COMST.2015.2444095</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>Aosong Electronics (2010) · <em>DHT11 Product Manual</em></summary>
+          <p>Aosong Electronics Co., Ltd. (2010). <em>DHT11 humidity and temperature sensor product manual.</em> Aosong Electronics.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Blynk Inc. (2022) · <em>Blynk IoT Platform Documentation v2.0</em></summary>
+          <p>Blynk Inc. (2022). <em>Blynk IoT platform documentation (v2.0).</em> <a href="https://docs.blynk.io" target="_blank" rel="noopener noreferrer">https://docs.blynk.io</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>Díaz (2021) · <em>UIS — Tesis de pregrado</em></summary>
+          <p>Díaz, J. (2021). <em>Sistema de detección de fugas de gas en viviendas de Bucaramanga mediante sensores MQ-2 y notificaciones SMS</em> [Tesis de pregrado]. Universidad Industrial de Santander.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Espressif Systems (2023) · <em>ESP32 Technical Reference Manual v5.1</em></summary>
+          <p>Espressif Systems. (2023). <em>ESP32 technical reference manual (v5.1).</em> <a href="https://www.espressif.com/en/support/documents/technical-documents" target="_blank" rel="noopener noreferrer">https://www.espressif.com</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>Figaro Engineering (2015) · <em>MQ-2 Semiconductor Gas Sensor Datasheet</em></summary>
+          <p>Figaro Engineering Inc. (2015). <em>MQ-2 semiconductor gas sensor: Datasheet.</em> Figaro Engineering.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Gubbi et al. (2013) · <em>Future Generation Computer Systems</em></summary>
+          <p>Gubbi, J., Buyya, R., Marusic, S., & Palaniswami, M. (2013). Internet of Things (IoT): A vision, architectural elements, and future directions. <em>Future Generation Computer Systems, 29</em>(7), 1645–1660. <a href="https://doi.org/10.1016/j.future.2013.01.010" target="_blank" rel="noopener noreferrer">https://doi.org/10.1016/j.future.2013.01.010</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>Haque et al. (2021) · <em>IEEE Access</em></summary>
+          <p>Haque, A. K. M., Islam, R., Bhattacharjee, S., Rahman, M. S., & Islam, M. R. (2021). IoT-based indoor air quality monitoring system using ESP32 and multi-sensor array. <em>IEEE Access, 9</em>, 112–130. <a href="https://doi.org/10.1109/ACCESS.2021.3089934" target="_blank" rel="noopener noreferrer">https://doi.org/10.1109/ACCESS.2021.3089934</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>Kumar & Tiwari (2019) · <em>IJACSA</em></summary>
+          <p>Kumar, N., & Tiwari, P. (2019). IoT-based smart environmental monitoring system for energy efficiency in buildings. <em>International Journal of Advanced Computer Science and Applications, 10</em>(3), 112–119. <a href="https://doi.org/10.14569/IJACSA.2019.0100314" target="_blank" rel="noopener noreferrer">https://doi.org/10.14569/IJACSA.2019.0100314</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>Mukhopadhyay & Lay-Ekuakille (2018) · <em>Sensors and Actuators A: Physical</em></summary>
+          <p>Mukhopadhyay, S. C., & Lay-Ekuakille, A. (2018). Advances in sensors and sensing systems for IoT applications. <em>Sensors and Actuators A: Physical, 269</em>, 497–512. <a href="https://doi.org/10.1016/j.sna.2017.11.009" target="_blank" rel="noopener noreferrer">https://doi.org/10.1016/j.sna.2017.11.009</a></p>
+        </details>
+        <details class="ref-item">
+          <summary>OMS (2018) · <em>Guidelines for Indoor Air Quality</em></summary>
+          <p>Organización Mundial de la Salud (OMS). (2018). <em>Guidelines for indoor air quality: Selected pollutants.</em> World Health Organization.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Patel, Shah & Mehta (2016) · <em>IJIRCCE</em></summary>
+          <p>Patel, K., Shah, M., & Mehta, P. (2016). IoT-based real-time environmental monitoring system using ESP8266. <em>International Journal of Innovative Research in Computer and Communication Engineering, 4</em>(5), 8812–8818.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Rodríguez & Vargas (2020) · <em>UNAL — Tesis de pregrado</em></summary>
+          <p>Rodríguez, C., & Vargas, M. (2020). <em>Sistema de monitoreo de condiciones ambientales en laboratorios farmacéuticos basado en ESP32 y ThingSpeak</em> [Tesis de pregrado]. Universidad Nacional de Colombia.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Torres & Quintero (2022) · <em>UPB — Tesis de pregrado</em></summary>
+          <p>Torres, F., & Quintero, A. (2022). <em>Sistema de monitoreo de confort térmico para aulas universitarias basado en ESP32 y MQTT</em> [Tesis de pregrado]. Universidad Pontificia Bolivariana.</p>
+        </details>
+        <details class="ref-item">
+          <summary>Zanella et al. (2014) · <em>IEEE Internet of Things Journal</em></summary>
+          <p>Zanella, A., Bui, N., Castellani, A., Vangelista, L., & Zorzi, M. (2014). Internet of Things for smart cities. <em>IEEE Internet of Things Journal, 1</em>(1), 22–32. <a href="https://doi.org/10.1109/JIOT.2014.2306328" target="_blank" rel="noopener noreferrer">https://doi.org/10.1109/JIOT.2014.2306328</a></p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== CONTACTO ==================== -->
+  <section class="section section-dark" id="contacto" aria-labelledby="contacto-title">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">10 · Autor</span>
+        <h2 class="section-title" id="contacto-title">Contacto</h2>
+      </div>
+
+      <div class="contacto-card reveal">
+        <div class="contacto-avatar" aria-hidden="true">EG</div>
+        <div class="contacto-info">
+          <h3>Edwin Alonso García Fuentes</h3>
+          <p class="contacto-rol">Estudiante · Ingeniería de Telecomunicaciones</p>
+          <p class="contacto-inst">Unidades Tecnológicas de Santander · FCNI</p>
+          <div class="contacto-links">
+            <a href="mailto:ealonsogarcia@uts.edu.co" class="contacto-link" aria-label="Correo electrónico">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              ealonsogarcia@uts.edu.co
+            </a>
+            <a href="tel:+573143724237" class="contacto-link" aria-label="Teléfono">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.18 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.16 6.16l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              +57 314 372 4237
+            </a>
+            <a href="https://github.com/edwingarcia18/SMAI---IoT" target="_blank" rel="noopener noreferrer" class="contacto-link" aria-label="GitHub del proyecto">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+              github.com/edwingarcia18/SMAI---IoT
+            </a>
+            <a href="https://smai-io-t.vercel.app/" target="_blank" rel="noopener noreferrer" class="contacto-link" aria-label="Sitio web del proyecto">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+              smai-io-t.vercel.app
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <span class="footer-logo">SMAI</span>
+          <p>Sistema de Monitoreo Ambiental Inteligente</p>
+        </div>
+        <div class="footer-info">
+          <p>Ingeniería de Telecomunicaciones · FCNI</p>
+          <p>Unidades Tecnológicas de Santander · Bucaramanga</p>
+        </div>
+        <div class="footer-copy">
+          <p>&copy; 2026 Edwin Alonso García Fuentes. Todos los derechos reservados.</p>
+          <p>Proyecto de Trabajo de Grado · F-DC-124 · Versión 1.0</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
